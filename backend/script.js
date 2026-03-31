@@ -1,6 +1,5 @@
 // FORM SUBMIT
 const form = document.getElementById("predictForm");
-
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -27,54 +26,52 @@ form.addEventListener("submit", async (e) => {
         // CALL BACKEND API
         const response = await fetch("/predict", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                radius,
-                mass,
-                temperature,
-                distance
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ radius, mass, temperature, distance })
         });
-
         const data = await response.json();
 
-        // SHOW RESULT
+        // SHOW RESULT WITH FADE IN
+        resultBox.style.opacity = 0;
         resultBox.innerText = "🌍 Result: " + data.prediction;
+        let opacity = 0;
+        const fadeIn = setInterval(() => {
+            opacity += 0.05;
+            resultBox.style.opacity = opacity;
+            if (opacity >= 1) clearInterval(fadeIn);
+        }, 30);
 
         helpBox.innerText = "✅ Prediction complete!";
         helpBox.className = "alert alert-success mt-3";
-
     } catch (error) {
         helpBox.innerText = "❌ Error connecting to server!";
         helpBox.className = "alert alert-danger mt-3";
     }
 });
 
-
 // DOWNLOAD FUNCTION
 function downloadResult() {
     const resultText = document.getElementById("result").innerText;
-
-    if (!resultText) {
-        alert("No result to download!");
-        return;
-    }
-
+    if (!resultText) { alert("No result to download!"); return; }
     const blob = new Blob([resultText], { type: "text/plain" });
     const link = document.createElement("a");
-
     link.href = URL.createObjectURL(blob);
     link.download = "ExoHabitAI_Result.txt";
     link.click();
 }
 
-
-// AI HELP BOX CLICK
+// AI HELP BOX
 const aiBox = document.getElementById("aiBox");
-
 aiBox.addEventListener("click", () => {
     alert("👋 Enter planetary data like:\n\nRadius: 1.0\nMass: 1.0\nTemperature: 288\nDistance: 1 AU");
-}); 
+});
+
+// SMOOTH SCROLL
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(link.getAttribute('href'))
+            .scrollIntoView({ behavior: 'smooth' });
+    });
+});
 
