@@ -77,3 +77,4 @@ const aiBox = document.getElementById("aiBox");
 aiBox.addEventListener("click", () => {
     alert("👋 Enter planetary data like:\n\nRadius: 1.0\nMass: 1.0\nTemperature: 288\nDistance: 1 AU");
 }); 
+
